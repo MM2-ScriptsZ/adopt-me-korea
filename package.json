@@ -4,12 +4,8 @@
   "description": "Adopt Me Korea - Roblox Private Server Gateway",
   "main": "index.html",
   "scripts": {
-    "start": "vercel dev",
     "deploy": "vercel deploy --prod"
   },
-  "keywords": ["roblox", "adopt-me", "korea"],
-  "author": "Adopt Me Korea",
-  "license": "MIT",
   "devDependencies": {
     "vercel": "^32.0.0"
   }
