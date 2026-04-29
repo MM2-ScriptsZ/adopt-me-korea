@@ -1,16 +1,6 @@
 {
   "version": 2,
   "name": "adopt-me-korea",
-  "builds": [
-    {
-      "src": "*.html",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "*.js",
-      "use": "@vercel/static"
-    }
-  ],
   "routes": [
     {
       "src": "/",
