@@ -7,16 +7,8 @@
       "dest": "/index.html"
     },
     {
-      "src": "/game.html",
-      "dest": "/game.html"
-    },
-    {
       "src": "/proxy.js",
       "dest": "/proxy.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
     }
   ],
   "headers": [
