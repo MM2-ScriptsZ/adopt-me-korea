@@ -1,10 +1,10 @@
-// proxy.js - X-Frame-Options Bypass Handler
-// This module fetches and injects pages to bypass framing restrictions
+// proxy.js - Roblox X-Frame-Options Bypass Handler
+// Fetches Roblox page and injects into iframe without toast notifications
 
-window.ProxyHelper = (function() {
+window.RobloxProxy = (function() {
     'use strict';
     
-    const PRIVATE_SERVER_URL = "https://www.roblox.com/games/920587237/Adopt-Me";
+    const ROBLOX_GAME_URL = "https://www.roblox.com/games/920587237/Adopt-Me";
     
     async function fetchPage(targetUrl) {
         try {
@@ -12,60 +12,45 @@ window.ProxyHelper = (function() {
                 mode: 'cors',
                 credentials: 'include',
                 headers: {
-                    'User-Agent': navigator.userAgent,
-                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-                    'Accept-Language': 'ko-KR,ko;q=0.9,en;q=0.8',
-                    'Cache-Control': 'no-cache'
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                    'Accept-Language': 'ko-KR,ko;q=0.9,en;q=0.8'
                 }
             });
             
             if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                throw new Error('HTTP ' + response.status);
             }
             
             let html = await response.text();
             
-            // Inject base tag for relative resources
+            // Add base tag for relative URLs
             if (!html.includes('<base')) {
-                html = html.replace('<head>', `<head><base href="${targetUrl}">`);
-            } else {
-                html = html.replace(/<base[^>]*>/, `<base href="${targetUrl}">`);
+                html = html.replace('<head>', '<head><base href="' + targetUrl + '">');
             }
             
-            // Remove X-Frame-Options meta tags and headers are irrelevant in srcdoc
+            // Remove any X-Frame-Options meta tags
             html = html.replace(/<meta[^>]*X-Frame-Options[^>]*>/gi, '');
             html = html.replace(/<meta[^>]*x-frame-options[^>]*>/gi, '');
             
-            // Inject styles to ensure proper iframe rendering
-            const injectStyle = `
-                <style>
-                    body { margin: 0; padding: 0; }
-                    iframe, object, embed { max-width: 100%; }
-                    html { overflow-y: auto; }
-                </style>
-            `;
-            html = html.replace('</head>', `${injectStyle}</head>`);
-            
-            // Add viewport meta if missing
-            if (!html.includes('viewport')) {
-                const viewportMeta = '<meta name="viewport" content="width=device-width, initial-scale=1.0">';
-                html = html.replace('<head>', `<head>${viewportMeta}`);
-            }
+            // Ensure proper rendering in iframe
+            const styleTag = '<style>body{margin:0;padding:0;overflow-y:auto;}iframe,object{max-width:100%;}</style>';
+            html = html.replace('</head>', styleTag + '</head>');
             
             return html;
             
         } catch (error) {
-            console.error("Proxy fetch error:", error);
+            console.error("Proxy error:", error);
             throw error;
         }
     }
     
-    function getPrivateServerUrl() {
-        return PRIVATE_SERVER_URL;
+    function getGameUrl() {
+        return ROBLOX_GAME_URL;
     }
     
     return {
         fetchPage: fetchPage,
-        getPrivateServerUrl: getPrivateServerUrl
+        getGameUrl: getGameUrl
     };
 })();
